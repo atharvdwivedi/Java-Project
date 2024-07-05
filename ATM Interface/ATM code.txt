@@ -1,0 +1,119 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class ATM {
+    private double balance;
+    private String pin;
+    private ArrayList<String> transactionHistory;
+
+    public ATM(String initialPin) {
+        balance = 0.0;
+        pin = initialPin;
+        transactionHistory = new ArrayList<>();
+    }
+
+    // Function to check account balance
+    public void checkBalance() {
+        System.out.println("Current Balance: " + balance);
+    }
+
+    // Function to withdraw cash
+    public void withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            transactionHistory.add("Withdrawal: " + amount);
+            System.out.println("Withdrawal successful. Please collect your cash.");
+        } else {
+            System.out.println("Insufficient balance.");
+        }
+    }
+
+    // Function to deposit cash
+    public void deposit(double amount) {
+        balance += amount;
+        transactionHistory.add("Deposit:  " + amount);
+        System.out.println("Deposit successful.");
+    }
+
+    // Function to change PIN
+    public void changePin(String newPin) {
+        pin = newPin;
+        System.out.println("PIN successfully changed.");
+    }
+
+    // Function to view transaction history
+    public void viewTransactionHistory() {
+        System.out.println("Transaction History:");
+        for (String transaction : transactionHistory) {
+            System.out.println(transaction);
+        }
+    }
+
+    // Function to verify PIN
+    public boolean verifyPin(String enteredPin) {
+        return pin.equals(enteredPin);
+    }
+}
+
+public class ATMSimulation {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Initialize ATM with a default PIN
+        ATM atm = new ATM("1234");
+
+        System.out.print("Enter your PIN: ");
+        String enteredPin = scanner.nextLine();
+
+        // Verify PIN before allowing access to ATM functions
+        if (atm.verifyPin(enteredPin)) {
+            int choice;
+            do {
+                // Display menu options
+                System.out.println("\nATM Menu:");
+                System.out.println("1. Check Balance");
+                System.out.println("2. Withdraw Cash");
+                System.out.println("3. Deposit Cash");
+                System.out.println("4. Change PIN");
+                System.out.println("5. View Transaction History");
+                System.out.println("6. Exit");
+                System.out.print("Enter your choice: ");
+                choice = scanner.nextInt();
+
+                switch (choice) {
+                    case 1:
+                        atm.checkBalance();
+                        break;
+                    case 2:
+                        System.out.print("Enter amount to withdraw: ");
+                        double withdrawAmount = scanner.nextDouble();
+                        atm.withdraw(withdrawAmount);
+                        break;
+                    case 3:
+                        System.out.print("Enter amount to deposit: ");
+                        double depositAmount = scanner.nextDouble();
+                        atm.deposit(depositAmount);
+                        break;
+                    case 4:
+                        System.out.print("Enter new PIN: ");
+                        scanner.nextLine(); // consume newline
+                        String newPin = scanner.nextLine();
+                        atm.changePin(newPin);
+                        break;
+                    case 5:
+                        atm.viewTransactionHistory();
+                        break;
+                    case 6:
+                        System.out.println("Thank you for using the ATM. Goodbye!");
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+            } while (choice != 6);
+        } else {
+            System.out.println("Incorrect PIN. Access denied.");
+        }
+        
+        scanner.close();
+    }
+}
